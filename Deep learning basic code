@@ -1,0 +1,34 @@
+class Three_H_DNN(nn.Module):
+    def __init__(self,inputs,outputs,Number_HiddenLayer,dropout=0.2):
+        super(Three_H_DNN, self).__init__()
+
+        ## layer
+        self.fc1 = nn.Linear(inputs, Number_HiddenLayer)
+        self.do1 = nn.Dropout(dropout)
+        self.fc2 = nn.Linear(Number_HiddenLayer,Number_HiddenLayer)
+        self.do2 = nn.Dropout(dropout)
+        self.fc3 = nn.Linear(Number_HiddenLayer,Number_HiddenLayer)
+        self.do3 = nn.Dropout(dropout)
+        self.fc_out = nn.Linear(Number_HiddenLayer, outputs)
+
+
+    def forward(self, x, min_=None, max_=None):
+        # normalize
+        # index = np.int((x.size(1)-1)/2)
+        # mm = x.mean([-1,-2]).unsqueeze(-1)
+        # std = x.std(-1)
+            
+        
+        
+        # x = x.view(-1, self.num_flat_features(x))
+        # x = (x - mm)/std
+        
+        x = self.do1(F.leaky_relu(self.fc1(x)))
+        x = self.do2(F.leaky_relu(self.fc2(x)))
+        x = self.do3(F.leaky_relu(self.fc3(x)))
+        x = self.fc_out(x)
+        # inv_minmax
+        # x = x*std + mm
+        # x[:,-1] = x[:,-1]+mm.squeeze(-1)
+
+        return x
